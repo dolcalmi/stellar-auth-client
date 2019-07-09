@@ -1,0 +1,58 @@
+{
+  "name": "stellar-auth-client",
+  "version": "0.1.0",
+  "description": "Client side library for Stellar SEP 0010 implementation",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dolcalmi/stellar-auth-client.git"
+  },
+  "keywords": [
+    "stellar",
+    "sep0010",
+    "auth"
+  ],
+  "author": "Juan P Lopez <dolcalmi@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dolcalmi/stellar-auth-client/issues"
+  },
+  "homepage": "https://github.com/dolcalmi/stellar-auth-client",
+  "main": "./lib/index.js",
+  "engines": {
+    "node": ">=8.16.0"
+  },
+  "dependencies": {
+    "@ledgerhq/hw-app-str": "^4.64.0",
+    "@ledgerhq/hw-transport-node-hid": "^4.64.0",
+    "@ledgerhq/hw-transport-u2f": "^4.64.0",
+    "axios": "^0.19.0",
+    "browser-or-node": "^1.2.1",
+    "core-js": "^3.1.4",
+    "is-valid-domain": "0.0.11",
+    "lodash.merge": "^4.6.1",
+    "regenerator-runtime": "^0.13.2",
+    "stellar-sdk": "^1.0.5"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "coveralls": "^3.0.4",
+    "eslint": "^6.0.1",
+    "mocha": "^6.1.4",
+    "mockdate": "^2.0.3",
+    "nyc": "^14.1.1"
+  },
+  "scripts": {
+    "clean": "rm -rf ./.nyc_output ./node_modules/.cache ./coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "mocha": "nyc mocha",
+    "test": "npm run lint && npm run mocha",
+    "report": "nyc -r text -r lcov report",
+    "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  }
+}
