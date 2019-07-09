@@ -1,4 +1,4 @@
-# Stellar Auth server library
+# Stellar Auth client library
 [![Version](https://img.shields.io/npm/v/stellar-auth-client.svg)](https://www.npmjs.org/package/stellar-auth-client)
 [![Build Status](https://api.travis-ci.org/dolcalmi/stellar-auth-client.svg?branch=master)](https://travis-ci.org/dolcalmi/stellar-auth-client)
 [![Coverage Status](https://coveralls.io/repos/github/dolcalmi/stellar-auth-client/badge.svg?branch=master)](https://coveralls.io/github/dolcalmi/stellar-auth-client?branch=master)
