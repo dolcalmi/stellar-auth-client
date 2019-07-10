@@ -6,7 +6,8 @@ module.exports = {
     StellarSdk: true,
     axios: true,
     chai: true,
-    expect: true,
+    sinon: true,
+    expect: true
   },
   rules: {
     'no-unused-vars': 0

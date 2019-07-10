@@ -1,9 +1,36 @@
-const testUtils = require('../test-utils');
-const stellarAuth = testUtils.getStellarAuthInstance();
-const expect = require('chai').expect;
+const MockAdapter = require('axios-mock-adapter');
 
-describe('StellarAuth - Options', function() {
+describe('StellarAuth', function() {
+  const stellarAuth = testUtils.getStellarAuthInstance();
   const serverKeyPair = testUtils.getServerKeyPair();
+  const clientKeyPair = testUtils.getClientKeyPair();
+
+  beforeEach(function() {
+    const url = 'https://acme.com';
+    this.axiosMock = new MockAdapter(axios);
+    this.axiosMock.onGet('https://acme.com/.well-known/stellar.toml')
+    .reply(200, `
+    #   The endpoint which clients should query to resolve stellar addresses
+    #   for users on your domain.
+    WEB_AUTH_ENDPOINT="https://acme.com/auth"
+    WEB_AUTH_ACCOUNT="${testUtils.getServerPublicKey()}"
+    `);
+
+    this.challenge = challengeUtil.challenge();
+    this.axiosMock.onGet('https://acme.com/auth', { params: { account: clientKeyPair.publicKey() } })
+    .reply(200, {
+      transaction: this.challenge
+    });
+    this.axiosMock.onPost('https://acme.com/auth').reply(200, {
+      token: testUtils.getToken()
+    });
+  });
+
+  afterEach(function() {
+    this.axiosMock.reset();
+    this.axiosMock.restore();
+  });
+
   it('Should have valid default values', function() {
     const options = stellarAuth.options;
     expect(options.allowHttp).to.equal(false);
@@ -46,6 +73,18 @@ describe('StellarAuth - Options', function() {
     expect(sa.options.anchorName).to.equal('my anchor');
     sa.setOption('anchorName', 'your anchor');
     expect(sa.getOption('anchorName')).to.equal('your anchor');
+  });
+
+  it('Should allow login with secret', async function() {
+    const auth = testUtils.getStellarAuthInstance({ domain: 'acme.com' });
+    const result = auth.loginWithSecret(clientKeyPair.secret())
+    await expect(result).to.become(testUtils.getToken());
+  });
+
+  it('Should throw error for login with invalid secret', async function() {
+    const auth = testUtils.getStellarAuthInstance({ domain: 'acme.com' });
+    const result = auth.loginWithSecret('asfdsd')
+    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-secret');
   });
 
 });
