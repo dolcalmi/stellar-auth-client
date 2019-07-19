@@ -1,32 +1,28 @@
-
 'use strict';
 
 //Load dependencies
-const chai = require('chai');
 const axios = require('axios');
-const sinon = require('sinon');
-const sinonChai = require('sinon-chai');
 const StellarSdk = require('stellar-sdk');
 const testUtils = require('./test-utils');
 const challengeUtil = require('./challenge-util');
 const chaiAsPromised = require('chai-as-promised');
 
-//Enable should assertion style for usage with chai-as-promised
-chai.should();
-
-//Extend chai
-chai.use(sinonChai);
-chai.use(chaiAsPromised);
-
 if (typeof window === 'undefined') {
-  //Expose globals
+  global.StellarAuthClient = require("../lib/");
   global.axios = axios;
-  global.expect = chai.expect;
-  global.sinon = sinon;
   global.testUtils = testUtils;
   global.StellarSdk = StellarSdk;
   global.challengeUtil = challengeUtil;
+  global.chai = require('chai');
+  global.chai.should();
+  global.chai.use(chaiAsPromised);
+  global.expect = global.chai.expect;
 } else {
   // eslint-disable-next-line no-undef
-  window.axios = StellarSdk.axios;
+  window.StellarSdk = StellarSdk;
+  window.axios = StellarAuthClient.axios;
+  StellarSdk.axios = StellarAuthClient.axios;
+  window.testUtils = testUtils;
+  window.challengeUtil = challengeUtil;
+  chai.use(chaiAsPromised);
 }

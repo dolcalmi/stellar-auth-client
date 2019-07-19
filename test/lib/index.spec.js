@@ -8,12 +8,14 @@ describe('StellarAuth', function() {
   beforeEach(function() {
     const url = 'https://acme.com';
     this.axiosMock = new MockAdapter(axios);
+    StellarSdk.Config.setDefault();
+    StellarSdk.Network.usePublicNetwork();
     this.axiosMock.onGet('https://acme.com/.well-known/stellar.toml')
     .reply(200, `
     #   The endpoint which clients should query to resolve stellar addresses
     #   for users on your domain.
     WEB_AUTH_ENDPOINT="https://acme.com/auth"
-    WEB_AUTH_ACCOUNT="${testUtils.getServerPublicKey()}"
+    SIGNING_KEY="${testUtils.getServerPublicKey()}"
     `);
 
     this.challenge = challengeUtil.challenge();

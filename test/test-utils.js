@@ -30,7 +30,6 @@ var utils = module.exports = {
   },
 
   getStellarAuthInstance: function(options = {}) {
-    var StellarAuth = require('../lib');
-    return new StellarAuth(options.domain || defaultDomain, options);
+    return new StellarAuthClient(options.domain || defaultDomain, options);
   },
 };

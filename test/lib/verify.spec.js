@@ -1,4 +1,3 @@
-const MockDate = require('mockdate');
 const verify = require('../../lib/verify');
 
 describe('StellarAuth - Verify', function() {
@@ -6,13 +5,16 @@ describe('StellarAuth - Verify', function() {
   const serverPublicKey = testUtils.getServerPublicKey();
   const clientPublicKey = testUtils.getClientPublicKey();
 
+  beforeEach(function() {
+    StellarSdk.Network.usePublicNetwork();
+  });
 
   it('Should be valid', async function() {
     const txBase64 = challengeUtil.challenge();
     const result = verify(txBase64, serverPublicKey, clientPublicKey);
     const tx = new StellarSdk.Transaction(txBase64);
     await expect(result).to.be.fulfilled;
-    await expect(result).to.become(tx);
+    await expect(result.then(t => t.toEnvelope().toXDR('base64'))).to.become(tx.toEnvelope().toXDR('base64'));
 
     await expect(
       verify(
@@ -80,11 +82,9 @@ describe('StellarAuth - Verify', function() {
   });
 
   it('Should be invalid for expired challenge', async function() {
-    MockDate.set('2100-11-22');
-    const txBase64 = challengeUtil.challenge();
+    const txBase64 = challengeUtil.challenge({ expired: true });
     const result = verify(txBase64, serverPublicKey, clientPublicKey);
     await expect(result).to.be.rejectedWith('stellar-auth.errors.expired-transaction');
-    MockDate.reset();
   });
 
 });

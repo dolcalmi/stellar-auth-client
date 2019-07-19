@@ -6,7 +6,6 @@ module.exports = {
     StellarSdk: true,
     axios: true,
     chai: true,
-    sinon: true,
     expect: true
   },
   rules: {

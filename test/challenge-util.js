@@ -12,11 +12,12 @@ function challenge(options = {}) {
     sign: true,
     diffOpType: false,
     addExtraOp: false,
+    expired: false,
   }, options);
 
   const serverKeyPair = testUtils.getServerKeyPair();
   const clientPublicKey = testUtils.getClientPublicKey();
-  const minTime = Date.now();
+  const minTime = Date.now() - (opts.expired ? opts.challengeExpiresIn * 3 : 0);
   const maxTime = minTime + opts.challengeExpiresIn;
   const timebounds = {
     minTime: minTime.toString(),
