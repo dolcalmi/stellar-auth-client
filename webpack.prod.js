@@ -5,7 +5,7 @@ module.exports = merge(common, {
   mode: 'production',
   devtool: 'source-map',
   externals: {
-    'stellar-sdk': 'stellar-sdk'
+    'stellar-sdk': 'StellarSdk'
   },
   optimization: {
     nodeEnv: 'production'

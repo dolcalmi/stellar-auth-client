@@ -1,5 +1,8 @@
 # https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
 
+examples
+dist
+
 # Logs
 logs
 *.log
@@ -15,6 +18,8 @@ test
 coverage
 .nyc_output
 .github
+karma.conf.js
+webpack*
 
 #build tools
 .travis.yml

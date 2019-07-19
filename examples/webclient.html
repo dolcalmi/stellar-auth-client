@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1 id="publicKey">Public Key: </h1>
+<p id="token">logging in to stellarport.io...</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/2.0.1/stellar-sdk.js"></script>
+<script src="../dist/stellar-auth-client.js"></script>
+<script>
+  const clientKeyPair = StellarSdk.Keypair.random();
+  document.getElementById("publicKey").innerHTML = "Public Key: " + clientKeyPair.publicKey();
+  const auth = new StellarAuthClient('stellarport.io', { anchorName: 'Stellarport' });
+  auth
+    .loginWithSecret(clientKeyPair.secret())
+    .then(t => {
+      document.getElementById("token").innerHTML = 'Token: ' + t;
+      console.log('token: ', t);
+    })
+</script>
+
+</body>
+</html>

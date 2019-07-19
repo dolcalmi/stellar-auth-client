@@ -17,7 +17,7 @@ function challenge(options = {}) {
 
   const serverKeyPair = testUtils.getServerKeyPair();
   const clientPublicKey = testUtils.getClientPublicKey();
-  const minTime = Date.now() - (opts.expired ? opts.challengeExpiresIn * 3 : 0);
+  const minTime = Math.floor(Date.now() / 1000) - (opts.expired ? opts.challengeExpiresIn * 3 : 0);
   const maxTime = minTime + opts.challengeExpiresIn;
   const timebounds = {
     minTime: minTime.toString(),
