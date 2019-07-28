@@ -109,7 +109,6 @@ Required: false
 
 ``` js
 const clientKeyPair = StellarSdk.Keypair.random();
-const auth = new StellarAuthClient('stellarport.io', { anchorName: 'Stellarport' });
 auth
   .loginWithSecret(clientKeyPair.secret())
   .then(jwtToken => saveJwtToken(jwtToken))
@@ -118,7 +117,6 @@ auth
 ### loginWithLedger
 
 ``` js
-const auth = new StellarAuthClient('stellarport.io', { anchorName: 'Stellarport' });
 auth
   .loginWithLedger(/*{ bip32Path: `44'/148'/13'` }*/)
   .then(jwtToken => saveJwtToken(jwtToken))
