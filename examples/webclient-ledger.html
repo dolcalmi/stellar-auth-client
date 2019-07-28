@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="token">logging in to stellarport.io...</p>
+<p id="error"></p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/2.0.1/stellar-sdk.js"></script>
+<script src="../dist/stellar-auth-client.js"></script>
+<script>
+  // you must use https. Please check https://dev.to/rhymes/really-easy-way-to-use-https-on-localhost-341m
+  // sudo apt install libnss3-tools
+  // mkcert -install
+  // mkcert localhost
+  // http-server -S -C ./localhost.pem -K ./localhost-key.pem
+  // go to https://localhost:8080/examples/webclient-ledger.html
+  const auth = new StellarAuthClient('stellarport.io', { anchorName: 'Stellarport' });
+  auth
+    .loginWithLedger()
+    .then(t => {
+      document.getElementById("token").innerHTML = 'Token: ' + t;
+      console.log('token: ', t);
+    })
+    .catch(e => {
+      document.getElementById("error").innerHTML = 'Error: ' + e;
+      console.log('error: ', e);
+    })
+</script>
+
+</body>
+</html>
