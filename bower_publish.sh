@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git clone "https://dolcalmi@github.com/dolcalmi/bower-stellar-auth-client.git" bower
+git clone "https://${GH_TOKEN}@github.com/dolcalmi/bower-stellar-auth-client.git" bower
 
 if [ ! -d "bower" ]; then
   echo "Error cloning"
