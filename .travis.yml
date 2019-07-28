@@ -34,3 +34,5 @@ deploy:
       node: 8.16.0
 addons:
   firefox: 'latest'
+services:
+  - xvfb
