@@ -72,7 +72,10 @@
     "test:node": "npm run lint && npm run mocha",
     "test:web": "npm run lint && npm run build:dev && ./node_modules/karma/bin/karma start",
     "report": "nyc -r text -r lcov report",
-    "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "preversion": "npm run test",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags"
   },
   "directories": {
     "lib": "lib",
