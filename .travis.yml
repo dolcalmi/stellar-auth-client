@@ -32,6 +32,13 @@ deploy:
       tags: true
       repo: dolcalmi/stellar-auth-client
       node: 8.16.0
+  - provider: script
+    script: "./bower_publish.sh"
+    skip_cleanup: true
+    on:
+      tags: true
+      repo: dolcalmi/stellar-auth-client
+      node: 8.16.0
 addons:
   firefox: 'latest'
 services:
