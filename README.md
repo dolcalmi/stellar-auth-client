@@ -8,11 +8,61 @@
 
 Client side library for [Stellar SEP 0010](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md) implementation.
 
-## Installation
+## Quick start
 
-Install the package with:
+Using npm to include stellar-auth-client in your own project:
 
-    npm install stellar-auth-client --save
+```shell
+npm install --save stellar-auth-client
+```
+
+For browsers,
+[use Bower to install stellar-auth-client](#to-self-host-for-use-in-the-browser). It
+exports a variable `StellarAuthClient`. The example below assumes you have
+`stellar-auth-client.js` relative to your html file.
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/{version}/stellar-sdk.js"></script>
+<script src="stellar-auth-client.js"></script>
+<script>
+  console.log(StellarAuthClient);
+</script>
+```
+
+## Install
+
+### To use as a module in a Node.js project
+
+1. Install it using npm:
+
+```shell
+npm install --save stellar-auth-client
+```
+
+2. require/import it in your JavaScript:
+
+```js
+var StellarAuthClient = require('stellar-auth-client');
+```
+
+### To self host for use in the browser
+
+1. Install it using [bower](http://bower.io):
+
+```shell
+bower install stellar-auth-client
+```
+
+2. Include it in the browser:
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/{version}/stellar-sdk.js"></script>
+<script src="./bower_components/stellar-auth-client/stellar-auth-client.js"></script>
+<script>
+  console.log(StellarAuthClient);
+</script>
+```
+
 
 ## Development
 
@@ -21,6 +71,13 @@ Run all tests:
 ```bash
 $ npm install
 $ npm test
+```
+
+To run a specific set of tests:
+
+```shell
+gulp test:node
+gulp test:browser
 ```
 
 Run a single test suite:

@@ -10,6 +10,9 @@ module.exports = {
     library: "StellarAuthClient",
     umdNamedDefine: true,
   },
+  externals: {
+    '@ledgerhq/hw-transport-node-hid': 'TransportNodeHid'
+  },
   node: {
     fs: "empty"
   },
