@@ -63,6 +63,67 @@ bower install stellar-auth-client
 </script>
 ```
 
+## Usage
+
+### Initialization
+
+``` js
+const StellarAuthClient = require('stellar-auth-client');
+
+// optional param
+const options = {
+  anchorName: 'Stellarport',
+  bip32Path: `44'/148'/0'`,
+  authAccount: null,
+  authEndpoint: null,
+}
+
+const auth = new StellarAuthClient('stellarport.io', options);
+```
+
+- **domain**\
+Domain where is the toml file.\
+Required: false
+- **options**\
+Object with optional params .\
+Required: false
+  - **anchorName**\
+  Default anchor name. If value is not set then validation is omitted\
+  Default value: `null`\
+  Required: false
+  - **bip32Path**\
+  bip 32 path when you use loginWithLedger.\
+  Default value: `'44'/148'/0'`\
+  Required: false
+  - **authAccount**\
+  server public key (toml SIGNING_KEY).\
+  Default value: `null`\
+  Required: false
+  - **authEndpoint**\
+  Auth server endpoint (toml WEB_AUTH_ENDPOINT).\
+  Default value: `null`\
+  Required: false
+
+
+### loginWithSecret
+
+``` js
+const clientKeyPair = StellarSdk.Keypair.random();
+const auth = new StellarAuthClient('stellarport.io', { anchorName: 'Stellarport' });
+auth
+  .loginWithSecret(clientKeyPair.secret())
+  .then(jwtToken => saveJwtToken(jwtToken))
+```
+
+### loginWithLedger
+
+``` js
+const auth = new StellarAuthClient('stellarport.io', { anchorName: 'Stellarport' });
+auth
+  .loginWithLedger(/*{ bip32Path: `44'/148'/13'` }*/)
+  .then(jwtToken => saveJwtToken(jwtToken))
+```
+
 
 ## Development
 
