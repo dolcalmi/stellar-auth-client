@@ -32,3 +32,5 @@ deploy:
       tags: true
       repo: dolcalmi/stellar-auth-client
       node: 8.16.0
+addons:
+  firefox: 'latest'
