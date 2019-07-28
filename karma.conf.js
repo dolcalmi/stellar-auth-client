@@ -6,7 +6,7 @@ delete webpackConfig.output;
 module.exports = function(config) {
   config.set({
     frameworks: ["mocha", "chai"],
-    browsers: ["Firefox"],
+    browsers: ["FirefoxHeadless"],
 
     files: [
       "dist/stellar-auth-client.dev.js",
