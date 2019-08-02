@@ -13,6 +13,7 @@ function challenge(options = {}) {
     diffOpType: false,
     addExtraOp: false,
     expired: false,
+    networkPassphrase: StellarSdk.Networks.TESTNET
   }, options);
 
   const serverKeyPair = testUtils.getServerKeyPair();
@@ -42,7 +43,11 @@ function challenge(options = {}) {
   );
 
   const builder = new StellarSdk
-    .TransactionBuilder(stellarServerAccount, { fee: 100, timebounds });
+    .TransactionBuilder(stellarServerAccount, {
+      fee: 100,
+      timebounds,
+      networkPassphrase: opts.networkPassphrase,
+    });
 
   if (opts.addExtraOp || opts.diffOpType) {
     builder.addOperation(op2);

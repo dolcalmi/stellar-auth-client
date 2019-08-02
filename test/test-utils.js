@@ -30,6 +30,7 @@ var utils = module.exports = {
   },
 
   getStellarAuthInstance: function(options = {}) {
+    options.networkPassphrase = options.networkPassphrase || StellarSdk.Networks.TESTNET;
     return new StellarAuthClient(options.domain || defaultDomain, options);
   },
 };

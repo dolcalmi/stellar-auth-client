@@ -30,7 +30,7 @@
     "detect-node": "^2.0.4",
     "lodash.merge": "^4.6.1",
     "regenerator-runtime": "^0.13.2",
-    "stellar-sdk": "^2.0.1",
+    "stellar-sdk": "^2.2.0",
     "urijs": "^1.19.1"
   },
   "devDependencies": {

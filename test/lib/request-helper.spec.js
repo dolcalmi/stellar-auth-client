@@ -9,7 +9,6 @@ describe('StellarAuth - Request Helper', function() {
     this.server.axios = axios;
     this.axiosMock = new MockAdapter(axios);
     StellarSdk.Config.setDefault();
-    StellarSdk.Network.usePublicNetwork();
     this.challenge = challengeUtil.challenge();
     this.axiosMock.onGet(url, { params: { account: testUtils.getClientPublicKey() } })
     .reply(200, {

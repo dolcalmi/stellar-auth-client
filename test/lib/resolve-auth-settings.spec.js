@@ -7,7 +7,6 @@ describe('StellarAuth - Auth Settings', function() {
     this.authSettings = new AuthSettings();
     this.axiosMock = new MockAdapter(axios);
     StellarSdk.Config.setDefault();
-    StellarSdk.Network.usePublicNetwork();
     this.axiosMock.onGet('https://acme.com/.well-known/stellar.toml')
     .reply(200, `
     #   The endpoint which clients should query to resolve stellar addresses
