@@ -20,7 +20,8 @@ describe('StellarAuth', function() {
     this.challenge = challengeUtil.challenge();
     this.axiosMock.onGet('https://acme.com/auth', { params: { account: clientKeyPair.publicKey() } })
     .reply(200, {
-      transaction: this.challenge
+      transaction: this.challenge.transaction,
+      network_passphrase: this.challenge.networkPassphrase
     });
     this.axiosMock.onPost('https://acme.com/auth').reply(200, {
       token: testUtils.getToken()

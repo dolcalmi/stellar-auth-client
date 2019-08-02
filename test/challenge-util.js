@@ -63,7 +63,10 @@ function challenge(options = {}) {
     tx.sign(serverKeyPair);
   }
 
-  return tx.toEnvelope().toXDR('base64');
+  return {
+    transaction: tx.toEnvelope().toXDR('base64'),
+    networkPassphrase: opts.networkPassphrase
+  }
 }
 
 module.exports = {

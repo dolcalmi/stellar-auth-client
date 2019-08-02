@@ -12,9 +12,10 @@ describe('StellarAuth - Request Helper', function() {
     this.challenge = challengeUtil.challenge();
     this.axiosMock.onGet(url, { params: { account: testUtils.getClientPublicKey() } })
     .reply(200, {
-      transaction: this.challenge
+      transaction: this.challenge.transaction,
+      network_passphrase: this.challenge.networkPassphrase
     });
-    this.axiosMock.onPost(url, { transaction: this.challenge }).reply(200, {
+    this.axiosMock.onPost(url, { transaction: this.challenge.transaction }).reply(200, {
       token: testUtils.getToken()
     });
   });
@@ -52,7 +53,7 @@ describe('StellarAuth - Request Helper', function() {
   });
 
   it('returns token for valid token request', async function() {
-    const result = this.server.getToken(this.challenge)
+    const result = this.server.getToken(this.challenge.transaction)
     await expect(result).to.be.fulfilled;
     await expect(result).to.become(testUtils.getToken());
   });

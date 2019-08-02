@@ -4,10 +4,10 @@ describe('StellarAuth - Verify', function() {
   const stellarAuth = testUtils.getStellarAuthInstance();
   const serverPublicKey = testUtils.getServerPublicKey();
   const clientPublicKey = testUtils.getClientPublicKey();
-  const networkPassphrase = StellarSdk.Networks.TESTNET
+  const networkPassphrase = StellarSdk.Networks.TESTNET;
 
   it('Should be valid', async function() {
-    const txBase64 = challengeUtil.challenge();
+    const txBase64 = challengeUtil.challenge().transaction;
     const result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
     const tx = new StellarSdk.Transaction(txBase64, networkPassphrase);
     await expect(result).to.be.fulfilled;
@@ -15,7 +15,7 @@ describe('StellarAuth - Verify', function() {
 
     await expect(
       verify(
-        challengeUtil.challenge({ invalidSequence: '2' }),
+        challengeUtil.challenge({ invalidSequence: '2' }).transaction,
         serverPublicKey,
         clientPublicKey,
         { invalidSequence: '3', networkPassphrase }
@@ -24,7 +24,7 @@ describe('StellarAuth - Verify', function() {
 
     await expect(
       verify(
-        challengeUtil.challenge({ anchorName: 'Acme anchor auth' }),
+        challengeUtil.challenge({ anchorName: 'Acme anchor auth' }).transaction,
         serverPublicKey,
         clientPublicKey,
         { anchorName: 'Acme anchor', networkPassphrase }
@@ -33,53 +33,53 @@ describe('StellarAuth - Verify', function() {
   });
 
   it('Should be invalid with invalid sequence', async function() {
-    let txBase64 = challengeUtil.challenge();
+    let txBase64 = challengeUtil.challenge().transaction;
     let result = verify(txBase64, serverPublicKey, clientPublicKey, { invalidSequence: '5' });
     await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
 
-    txBase64 = challengeUtil.challenge({ invalidSequence: '3', networkPassphrase });
+    txBase64 = challengeUtil.challenge({ invalidSequence: '3', networkPassphrase }).transaction;
     result = verify(txBase64, serverPublicKey, clientPublicKey);
     await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
   });
 
   it('Should be invalid with invalid anchor name', async function() {
-    let txBase64 = challengeUtil.challenge();
+    let txBase64 = challengeUtil.challenge().transaction;
     let result = verify(txBase64, serverPublicKey, clientPublicKey, { anchorName: 'Anchor', networkPassphrase });
     await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
 
-    txBase64 = challengeUtil.challenge({ anchorName: 'Acme' });
+    txBase64 = challengeUtil.challenge({ anchorName: 'Acme' }).transaction;
     result = verify(txBase64, serverPublicKey, clientPublicKey, { anchorName: 'Anchor', networkPassphrase });
     await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
   });
 
   it('Should be invalid without server signature', async function() {
-    const txBase64 = challengeUtil.challenge({ sign: false });
+    const txBase64 = challengeUtil.challenge({ sign: false }).transaction;
     const result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
     await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
   });
 
   it('Should be invalid with invalid server signature', async function() {
-    const txBase64 = challengeUtil.challenge();
+    const txBase64 = challengeUtil.challenge().transaction;
     const result = verify(txBase64, StellarSdk.Keypair.random().publicKey(), clientPublicKey, { networkPassphrase });
     await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
   });
 
   it('Should be invalid with invalid operation', async function() {
-    let txBase64 = challengeUtil.challenge();
+    let txBase64 = challengeUtil.challenge().transaction;
     let result = verify(txBase64, serverPublicKey, StellarSdk.Keypair.random().publicKey(), { networkPassphrase });
     await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
 
-    txBase64 = challengeUtil.challenge({ diffOpType: true });
+    txBase64 = challengeUtil.challenge({ diffOpType: true }).transaction;
     result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
     await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
 
-    txBase64 = challengeUtil.challenge({ addExtraOp: true });
+    txBase64 = challengeUtil.challenge({ addExtraOp: true }).transaction;
     result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
     await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
   });
 
   it('Should be invalid for expired challenge', async function() {
-    const txBase64 = challengeUtil.challenge({ expired: true });
+    const txBase64 = challengeUtil.challenge({ expired: true }).transaction;
     const result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
     await expect(result).to.be.rejectedWith('stellar-auth.errors.expired-transaction');
   });
