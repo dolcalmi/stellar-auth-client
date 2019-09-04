@@ -1,7 +1,6 @@
 language: node_js
 node_js:
-  - "8.16.0"
-  - "10"
+  - "10.16.3"
   - "12"
 sudo: false
 before_install:
@@ -31,14 +30,14 @@ deploy:
     on:
       tags: true
       repo: dolcalmi/stellar-auth-client
-      node: 8.16.0
+      node: 10.16.3
   - provider: script
     script: "./bower_publish.sh"
     skip_cleanup: true
     on:
       tags: true
       repo: dolcalmi/stellar-auth-client
-      node: 8.16.0
+      node: 10.16.3
 addons:
   firefox: 'latest'
 env:
