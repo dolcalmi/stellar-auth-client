@@ -39,7 +39,7 @@ describe('StellarAuth', function() {
     expect(options.bip32Path).to.equal(`44'/148'/0'`);
     expect(options.authEndpoint).to.equal(null);
     expect(options.authAccount).to.equal(null);
-    expect(options.anchorName).to.equal(null);
+    expect(options.homeDomain).to.equal(stellarAuth.homeDomain);
   });
 
   it('Should allow set allowHttp value', function() {
@@ -71,14 +71,18 @@ describe('StellarAuth', function() {
   });
 
   it('Should allow set anchor name value', function() {
-    var sa = testUtils.getStellarAuthInstance({ anchorName: 'my anchor' });
-    expect(sa.options.anchorName).to.equal('my anchor');
-    sa.setOption('anchorName', 'your anchor');
-    expect(sa.getOption('anchorName')).to.equal('your anchor');
+    var sa = testUtils.getStellarAuthInstance({ homeDomain: 'my anchor' });
+    expect(sa.options.homeDomain).to.equal('my anchor');
+    sa.setOption('homeDomain', 'your anchor');
+    expect(sa.getOption('homeDomain')).to.equal('your anchor');
   });
 
   it('Should allow login with secret', async function() {
-    const auth = testUtils.getStellarAuthInstance({ domain: 'acme.com' });
+    const auth = testUtils.getStellarAuthInstance({
+      domain: 'acme.com',
+      authAccount: testUtils.getServerPublicKey(),
+      authEndpoint: 'https://acme.com/auth'
+    });
     const result = auth.loginWithSecret(clientKeyPair.secret())
     await expect(result).to.become(testUtils.getToken());
   });

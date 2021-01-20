@@ -1,5 +1,5 @@
 const StellarAuthClient = require('../lib');
-const auth = new StellarAuthClient('stellarport.io', { anchorName: 'Stellarport' });
+const auth = new StellarAuthClient('k.tempocrypto.com');
 auth
   .loginWithLedger()
   // .loginWithLedger({ bip32Path: `44'/148'/13'` })

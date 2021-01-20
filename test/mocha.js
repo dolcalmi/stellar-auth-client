@@ -2,6 +2,7 @@
 
 //Load dependencies
 const axios = require('axios');
+const sinon = require("sinon");
 const StellarSdk = require('stellar-sdk');
 const testUtils = require('./test-utils');
 const challengeUtil = require('./challenge-util');
@@ -10,6 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 if (typeof window === 'undefined') {
   global.StellarAuthClient = require("../lib/");
   global.axios = axios;
+  global.sinon = sinon;
   global.testUtils = testUtils;
   global.StellarSdk = StellarSdk;
   global.challengeUtil = challengeUtil;

@@ -72,13 +72,14 @@ const StellarAuthClient = require('stellar-auth-client');
 
 // optional param
 const options = {
-  anchorName: 'Stellarport',
+  homeDomain: 'k.tempocrypto.com',
   bip32Path: `44'/148'/0'`,
   authAccount: null,
   authEndpoint: null,
+  allowHttp: false
 }
 
-const auth = new StellarAuthClient('stellarport.io', options);
+const auth = new StellarAuthClient('k.tempocrypto.com', options);
 ```
 
 - **domain**\
@@ -87,9 +88,9 @@ Required: false
 - **options**\
 Object with optional params .\
 Required: false
-  - **anchorName**\
-  Default anchor name. If value is not set then validation is omitted\
-  Default value: `null`\
+  - **homeDomain**\
+  Default home domain. If value is not set then domain is used.\
+  Default value: `domain`\
   Required: false
   - **bip32Path**\
   bip 32 path when you use loginWithLedger.\
@@ -103,11 +104,29 @@ Required: false
   Auth server endpoint (toml WEB_AUTH_ENDPOINT).\
   Default value: `null`\
   Required: false
+  - **allowHttp**\
+  HTTPS required by default, use this with false for testing.\
+  Default value: `false`\
+  Required: false
 
 
 ### loginWithSecret
 
 ``` js
+const clientKeyPair = StellarSdk.Keypair.random();
+auth
+  .loginWithSecret(clientKeyPair.secret())
+  .then(jwtToken => saveJwtToken(jwtToken))
+```
+With custom auth account and endpoint
+``` js
+const auth = new StellarAuthClient('yourdomain.com', {
+  allowHttp: true,
+  authAccount: 'GAJXKAG...your server public key...HP6PCHA',
+  authEndpoint: 'http://localhost:3000/auth',
+  networkPassphrase: 'Test SDF Network ; September 2015'
+});
+
 const clientKeyPair = StellarSdk.Keypair.random();
 auth
   .loginWithSecret(clientKeyPair.secret())

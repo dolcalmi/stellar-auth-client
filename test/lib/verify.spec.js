@@ -8,80 +8,52 @@ describe('StellarAuth - Verify', function() {
 
   it('Should be valid', async function() {
     const txBase64 = challengeUtil.challenge().transaction;
-    const result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
+    const result = verify(txBase64, serverPublicKey, clientPublicKey, {
+      homeDomain: 'acme.com',
+      networkPassphrase,
+      endpoint: 'https://acme.com/auth'
+    });
     const tx = new StellarSdk.Transaction(txBase64, networkPassphrase);
-    await expect(result).to.be.fulfilled;
-    await expect(result.then(t => t.toEnvelope().toXDR('base64'))).to.become(tx.toEnvelope().toXDR('base64'));
 
-    await expect(
-      verify(
-        challengeUtil.challenge({ invalidSequence: '2' }).transaction,
-        serverPublicKey,
-        clientPublicKey,
-        { invalidSequence: '3', networkPassphrase }
-      )
-    ).to.be.fulfilled;
-
-    await expect(
-      verify(
-        challengeUtil.challenge({ anchorName: 'Acme anchor auth' }).transaction,
-        serverPublicKey,
-        clientPublicKey,
-        { anchorName: 'Acme anchor', networkPassphrase }
-      )
-    ).to.be.fulfilled;
-  });
-
-  it('Should be invalid with invalid sequence', async function() {
-    let txBase64 = challengeUtil.challenge().transaction;
-    let result = verify(txBase64, serverPublicKey, clientPublicKey, { invalidSequence: '5' });
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
-
-    txBase64 = challengeUtil.challenge({ invalidSequence: '3', networkPassphrase }).transaction;
-    result = verify(txBase64, serverPublicKey, clientPublicKey);
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
+    await expect(result).to.not.be.null;
+    await expect(result.toEnvelope().toXDR('base64')).to.equal(tx.toEnvelope().toXDR('base64'));
   });
 
   it('Should be invalid with invalid anchor name', async function() {
     let txBase64 = challengeUtil.challenge().transaction;
-    let result = verify(txBase64, serverPublicKey, clientPublicKey, { anchorName: 'Anchor', networkPassphrase });
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
+    let result = () => verify(txBase64, serverPublicKey, clientPublicKey, { homeDomain: 'Anchor', endpoint: 'https://acme.com/auth', networkPassphrase });
+    expect(result).to.throw(/Invalid homeDomains: the transaction\'s operation key name does not match the expected home domain/);
 
-    txBase64 = challengeUtil.challenge({ anchorName: 'Acme' }).transaction;
-    result = verify(txBase64, serverPublicKey, clientPublicKey, { anchorName: 'Anchor', networkPassphrase });
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
-  });
-
-  it('Should be invalid without server signature', async function() {
-    const txBase64 = challengeUtil.challenge({ sign: false }).transaction;
-    const result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
+    txBase64 = challengeUtil.challenge({ homeDomain: 'acme.com' }).transaction;
+    result = () => verify(txBase64, serverPublicKey, clientPublicKey, { homeDomain: 'anchor.com', endpoint: 'https://auth.acme.com/auth', networkPassphrase });
+    expect(result).to.throw(/Invalid homeDomains: the transaction\'s operation key name does not match the expected home domain/);
   });
 
   it('Should be invalid with invalid server signature', async function() {
     const txBase64 = challengeUtil.challenge().transaction;
-    const result = verify(txBase64, StellarSdk.Keypair.random().publicKey(), clientPublicKey, { networkPassphrase });
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
+    const result = () => verify(txBase64, StellarSdk.Keypair.random().publicKey(), clientPublicKey, { homeDomain: 'acme.com',  endpoint: 'https://auth.acme.com/auth', networkPassphrase });
+    expect(result).to.throw(/The transaction source account is not equal to the server\'s account/);
+  });
+
+  it('Should be invalid with invalid endpoint', async function() {
+    const verifyOpts = { homeDomain: 'acme.com', networkPassphrase };
+    let txBase64 = challengeUtil.challenge().transaction;
+    let result = () => verify(txBase64, serverPublicKey, clientPublicKey, verifyOpts);
+    expect(result).to.throw(/stellar-auth.errors.invalid-endpoint/);
   });
 
   it('Should be invalid with invalid operation', async function() {
+    const verifyOpts = { homeDomain: 'acme.com',  endpoint: 'https://auth.acme.com/auth', networkPassphrase };
     let txBase64 = challengeUtil.challenge().transaction;
-    let result = verify(txBase64, serverPublicKey, StellarSdk.Keypair.random().publicKey(), { networkPassphrase });
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
-
-    txBase64 = challengeUtil.challenge({ diffOpType: true }).transaction;
-    result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
-
-    txBase64 = challengeUtil.challenge({ addExtraOp: true }).transaction;
-    result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.invalid-transaction');
+    let result = () => verify(txBase64, serverPublicKey, StellarSdk.Keypair.random().publicKey(), verifyOpts);
+    expect(result).to.throw(/The operation source account is not equal to the client\'s account/);
   });
 
   it('Should be invalid for expired challenge', async function() {
-    const txBase64 = challengeUtil.challenge({ expired: true }).transaction;
-    const result = verify(txBase64, serverPublicKey, clientPublicKey, { networkPassphrase });
-    await expect(result).to.be.rejectedWith('stellar-auth.errors.expired-transaction');
+    const verifyOpts = { homeDomain: 'acme.com',  endpoint: 'https://auth.acme.com/auth', networkPassphrase };
+    const txBase64 = challengeUtil.challenge({ challengeExpiresIn: -10 }).transaction;
+    const result = () => verify(txBase64, serverPublicKey, clientPublicKey, verifyOpts);
+    expect(result).to.throw(/The transaction has expired/);
   });
 
 });
