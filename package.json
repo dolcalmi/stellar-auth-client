@@ -1,6 +1,6 @@
 {
   "name": "stellar-auth-client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Client side library for Stellar SEP 0010 implementation",
   "repository": {
     "type": "git",
